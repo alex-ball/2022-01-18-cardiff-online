@@ -4,7 +4,7 @@ layout: workshop      # DON'T CHANGE THIS.
 # online workshop) are available at
 # https://carpentries.github.io/workshop-template/customization/index.html
 venue: "Cardiff University"        # brief name of the institution that hosts the workshop without address (e.g., "Euphoric State University")
-address: "Room T/2.08"      # full street address of workshop (e.g., "Room A, 123 Forth Street, Blimingen, Euphoria"), videoconferencing URL, or 'online'
+address: "Room T/2.08 and online"      # full street address of workshop (e.g., "Room A, 123 Forth Street, Blimingen, Euphoria"), videoconferencing URL, or 'online'
 country: "gb"      # lowercase two-letter ISO country code such as "fr" (see https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) for the institution that hosts the workshop
 language: "en"     # lowercase two-letter ISO language code such as "fr" (see https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) for the workshop
 latitude: "51.484"        # decimal latitude of workshop venue (use https://www.latlong.net/)
@@ -119,10 +119,13 @@ can use https://www.latlong.net/ to find the lat/long of an
 address.
 {% endcomment %}
 {% assign begin_address = page.address | slice: 0, 4 | downcase  %}
+{% assign end_address = page.address | slice: -6, 6 | downcase  %}
 {% if page.address == "online" %}
 {% assign online = "true_private" %}
 {% elsif begin_address contains "http" %}
 {% assign online = "true_public" %}
+{% elsif end_address contains "online" %}
+{% assign online = "true_hybrid" %}
 {% else %}
 {% assign online = "false" %}
 {% endif %}
@@ -146,6 +149,18 @@ address.
 <p id="where">
   <strong>Where:</strong> This training will take place online.
   The instructors will provide you with the information you will need to connect to this meeting.
+</p>
+{% elsif online == "true_hybrid" %}
+<p id="where">
+  <strong>Where:</strong>
+  {{page.address}}.
+  {% if page.latitude and page.longitude %}
+  Get directions with
+  <a href="//www.openstreetmap.org/?mlat={{page.latitude}}&mlon={{page.longitude}}&zoom=16">OpenStreetMap</a>
+  or
+  <a href="//maps.google.com/maps?q={{page.latitude}},{{page.longitude}}">Google Maps</a>.
+  {% endif %}
+  If joining online, the instructors will provide you with the information you will need to connect to this meeting.
 </p>
 {% endif %}
 
